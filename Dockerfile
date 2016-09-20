@@ -1,4 +1,5 @@
 #
+# sudo docker build -t name:lf001 /volume1/docker/liquidfeedback
 # docker-machine start default
 # eval $(docker-machine env default)
 # docker build -t liquid/feedback .
@@ -40,12 +41,12 @@ RUN /etc/init.d/postgresql start && \
 
 USER root
 RUN cd /
-RUN wget -c http://www.public-software-group.org/pub/projects/liquid_feedback/backend/v3.1.0/liquid_feedback_core-v3.1.0.tar.gz
-RUN tar xzvf liquid_feedback_core-v3.1.0.tar.gz
-RUN cd liquid_feedback_core-v3.1.0 && make
+RUN wget -c http://www.public-software-group.org/pub/projects/liquid_feedback/backend/v3.2.2/liquid_feedback_core-v3.2.2.tar.gz
+RUN tar xzvf liquid_feedback_core-v3.2.2.tar.gz
+RUN cd liquid_feedback_core-v3.2.2 && make
 
 RUN mkdir -p /opt/liquid_feedback_core
-RUN cd /liquid_feedback_core-v3.1.0 && \
+RUN cd /liquid_feedback_core-v3.2.2 && \
 	cp -f core.sql lf_update lf_update_issue_order lf_update_suggestion_order \
 		/opt/liquid_feedback_core
 
@@ -55,10 +56,6 @@ RUN /etc/init.d/postgresql start && \
 	su - www-data -s /bin/sh -c '/usr/bin/psql -v ON_ERROR_STOP=1 -f /opt/liquid_feedback_core/core.sql liquid_feedback' && \
 	su - www-data -s /bin/sh -c '/usr/bin/psql -f /tmp/createdb.sql liquid_feedback'
 
-# Create Admin user
-# INSERT INTO member (login, name, admin, password) VALUES ('admin', 'Administrator', TRUE, '$1$/EMPTY/$NEWt7XJg2efKwPm4vectc1');
-# \q
-# exit
 
 # Install MoonBridge
 RUN cd /root
@@ -77,18 +74,18 @@ RUN cp -rf /usr/include/lua5.2/* /usr/include
 RUN cp -rf /usr/include/postgresql/* /usr/include
 RUN cp -rf /usr/include/postgresql/9.4/server/* /usr/include
 RUN cd /root
-RUN wget -c http://www.public-software-group.org/pub/projects/webmcp/v2.0.3/webmcp-v2.0.3.tar.gz
-RUN tar xzvf webmcp-v2.0.3.tar.gz
+RUN wget -c http://www.public-software-group.org/pub/projects/webmcp/v2.1.0/webmcp-v2.1.0.tar.gz
+RUN tar xzvf webmcp-v2.1.0.tar.gz
 RUN mkdir -p /opt/webmcp
-RUN cd webmcp-v2.0.3 && make && \
+RUN cd webmcp-v2.1.0 && make && \
 	cp -RL framework/* /opt/webmcp/
 
 # Install LiquidFeedback frontend
 WORKDIR "/"
-RUN wget -c http://www.public-software-group.org/pub/projects/liquid_feedback/frontend/v3.1.0/liquid_feedback_frontend-v3.1.0.tar.gz
-RUN tar xzvf liquid_feedback_frontend-v3.1.0.tar.gz
+RUN wget -c http://www.public-software-group.org/pub/projects/liquid_feedback/frontend/v3.2.1/liquid_feedback_frontend-v3.2.1.tar.gz
+RUN tar xzvf liquid_feedback_frontend-v3.2.1.tar.gz
 RUN rm -rf /opt/liquid_feedback_frontend ; \
-	mv /liquid_feedback_frontend-v3.1.0 /opt/liquid_feedback_frontend && \
+	mv /liquid_feedback_frontend-v3.2.1 /opt/liquid_feedback_frontend && \
 	mkdir -p /opt/liquid_feedback_frontend/tmp && \
 	chown -R www-data /opt/liquid_feedback_frontend
 COPY myconfig.lua /opt/liquid_feedback_frontend/config/myconfig.lua

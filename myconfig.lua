@@ -4,7 +4,7 @@
 
 -- Name of this instance, defaults to name of config file
 -- ------------------------------------------------------------------------
-config.instance_name = "Demo Site"
+config.instance_name = "Instance name"
 
 
 -- Information about service provider (HTML)
@@ -113,7 +113,7 @@ config.public_access = "everything"
 
 -- Default language, defaults to "en"
 -- ------------------------------------------------------------------------
--- config.default_lang = "en"
+config.default_lang = "de"
 
 
 -- after how long is a user considered inactive and the trustee will see warning,
